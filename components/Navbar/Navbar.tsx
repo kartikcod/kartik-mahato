@@ -2,13 +2,20 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const navItems = [
   { name: "Home", href: "/" },
   { name: "About", href: "/about" },
   { name: "Projects", href: "/project" },
+  { name: "Games", href: "/games" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -44,33 +51,38 @@ export default function Navbar() {
       >
         <motion.div
           animate={{
-            backgroundColor: scrolled ? "rgba(0,0,0,0.75)" : "rgba(0,0,0,0.25)",
+            backgroundColor: scrolled
+              ? "rgba(0, 0, 0, 0.75) "
+              : "rgba(0, 0, 0)",
             backdropFilter: scrolled ? "blur(24px)" : "blur(10px)",
             boxShadow: scrolled
-              ? "0 10px 40px rgba(0,0,0,0.25)"
+              ? "0 10px 40px rgba(67, 79, 250, 0.25)"
               : "0 0 0 rgba(0,0,0,0)",
+            border: scrolled
+              ? "2px solid rgba(198, 202, 255, 0.25)"
+              : " 0px solid rgba(198, 202, 255, 0.25)",
           }}
           transition={{ duration: 0.35, ease: EASE }}
           className="max-w-[1050px] mx-auto flex items-center justify-between px-5 md:px-7 py-2.5 rounded-full"
-
-          
         >
           {/* ========= LOGO ========= */}
-          <Link href="/" className="group flex items-center gap-3">
+          <Link href="/" className="group flex items-center gap-3 outline-none">
+            {/* Animated Logo Container */}
             <motion.div
-              whileHover={{ rotate: 180, scale: 1.08 }}
-              transition={{ duration: 0.6, ease: "easeInOut" }}
-              className="relative w-10 h-10 rounded-full bg-gradient-to-br from-violet-500 to-cyan-500 flex items-center justify-center shadow-lg"
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }} // Professional Easing className="relative w-10 h-10 rounded-full bg-gradient-to-br from-violet-600 to-cyan-500 flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.3)] group-hover:shadow-cyan-500/40 transition-shadow duration-500"
             >
-              <span className="text-white font-black text-lg">K</span>
+              <div className="relative w-15 h-10">
+                <Image
+                  draggable="false"
+                  src="/header_logo.png"
+                  alt="Dev Kartik Logo"
+                  fill
+                  className="object-contain brightness-0  invert" // Logo ko white banane ke liye
+                />
+              </div>
             </motion.div>
-
-            <motion.span
-              whileHover={{ letterSpacing: "0.06em" }}
-              className="text-white font-black text-xl tracking-tight hidden sm:block"
-            >
-              Kartik
-            </motion.span>
           </Link>
 
           {/* ========= DESKTOP LINKS ========= */}
@@ -89,7 +101,9 @@ export default function Navbar() {
                     <motion.span
                       whileHover={{ y: -2 }}
                       className={`text-sm font-medium transition-colors ${
-                        isActive ? "text-white" : "text-gray-400 group-hover:text-white"
+                        isActive
+                          ? "text-white"
+                          : "text-gray-400 group-hover:text-white"
                       }`}
                     >
                       {item.name}
@@ -144,14 +158,14 @@ export default function Navbar() {
                       isMenuOpen && i === 0
                         ? 45
                         : isMenuOpen && i === 2
-                        ? -45
-                        : 0,
+                          ? -45
+                          : 0,
                     y:
                       isMenuOpen && i === 0
                         ? 6
                         : isMenuOpen && i === 2
-                        ? -6
-                        : 0,
+                          ? -6
+                          : 0,
                     opacity: isMenuOpen && i === 1 ? 0 : 1,
                   }}
                   transition={{ duration: 0.3 }}

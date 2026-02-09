@@ -17,12 +17,12 @@ export default function Hero() {
 
   const yText = useSpring(
     useTransform(scrollY, [0, 500], [0, -100]),
-    springConfig
+    springConfig,
   );
 
   const yImage = useSpring(
     useTransform(scrollY, [0, 500], [0, -40]),
-    springConfig
+    springConfig,
   );
 
   /* ========= VARIANTS ========= */
@@ -94,7 +94,20 @@ export default function Hero() {
             variants={itemVariants}
             className="text-zinc-600 text-sm sm:text-lg md:text-xl font-medium tracking-tight"
           >
-            <span className="inline-block mr-1">👋</span>
+            <motion.span
+              animate={{
+                rotate: [0, -10, 12, -10, 9, 0], // Shake angles
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatDelay: 1, // Har shake ke baad thoda break
+                ease: "easeInOut",
+              }}
+              className="inline-block mr-1 origin-bottom" // origin-bottom se shake natural lagega
+            >
+              👋
+            </motion.span>
             My Name is
             <span className="font-bold text-black mx-1.5 relative inline-block">
               Kartik Mahato
@@ -166,13 +179,12 @@ export default function Hero() {
           & Developer
         </motion.h1>
       </div>
-    
 
-      <motion.div
+      {/* <motion.div
         variants={itemVariants}
         className="absolute bottom-8 right-6 md:bottom-12 md:right-12 z-30 flex gap-6 opacity-40 grayscale"
       >
-        {[ "React", "Tailwind", "Framer Motion"].map((t) => (
+        {["React", "Tailwind", "Framer Motion"].map((t) => (
           <span
             key={t}
             className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-black"
@@ -180,7 +192,7 @@ export default function Hero() {
             {t}
           </span>
         ))}
-      </motion.div>
+      </motion.div> */}
     </motion.section>
   );
 }

@@ -253,8 +253,8 @@ export default function About() {
           <div className="flex flex-col justify-center space-y-6 sm:space-y-8">
             {[
               { number: "01+", label: "Years of", sublabel: "Experience" },
-              { number: "3+", label: "Projects", sublabel: "Completed" },
-              { number: "3+", label: "Happy", sublabel: "Clients" },
+              { number: "6+", label: "Projects", sublabel: "Completed" },
+              { number: "6+", label: "Happy", sublabel: "Clients" },
               { number: "100%", label: "Client", sublabel: "Satisfaction" },
             ].map((stat, index) => (
               <motion.div
