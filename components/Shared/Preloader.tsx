@@ -7,16 +7,27 @@ export default function Preloader() {
   const [index, setIndex] = useState(0);
   const [dimension, setDimension] = useState({ width: 0, height: 0 });
 
-  const words = ["Hello", "Namaste", "नमस्ते", "Welcome", "स्वागत", "Portfolio", "Kartik Mahato"];
+  const words = [
+    "Hello",
+    "Namaste",
+    "नमस्ते",
+    "Welcome",
+    "स्वागत",
+    "Portfolio",
+    "Kartik Mahato",
+  ];
 
   useEffect(() => {
     setDimension({ width: window.innerWidth, height: window.innerHeight });
 
     if (index === words.length - 1) return;
-    
-    const timeout = setTimeout(() => {
-      setIndex(index + 1);
-    }, index === 0 ? 1000 : 200);
+
+    const timeout = setTimeout(
+      () => {
+        setIndex(index + 1);
+      },
+      index === 0 ? 1000 : 200,
+    );
 
     return () => clearTimeout(timeout);
   }, [index]);
@@ -27,18 +38,19 @@ export default function Preloader() {
   const curve = {
     initial: {
       d: initialPath,
-      transition: { duration: 1, ease: [0.76, 0, 0.24, 1] }
     },
     exit: {
       d: targetPath,
-      transition: { duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.3 }
-    }
+    },
   };
 
   return (
     <motion.div
       initial={{ top: 0 }}
-      exit={{ top: "-100vh", transition: { duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.2 } }}
+      exit={{
+        top: "-100vh",
+        transition: { duration: 1, ease: [0.76, 0, 0.24, 1], delay: 0.2 },
+      }}
       className="fixed inset-0 z-[9999] flex items-center justify-center bg-[#141414]"
     >
       {dimension.width > 0 && (
@@ -51,10 +63,15 @@ export default function Preloader() {
             <span className="mr-3 block h-3 w-3 rounded-full bg-white animate-pulse" />
             {words[index]}
           </motion.p>
-          
+
           {/* SVG for Curve Transition */}
           <svg className="absolute top-0 w-full h-[calc(100%+300px)] fill-[#141414]">
-            <motion.path variants={curve} initial="initial" exit="exit" />
+            <motion.path
+              variants={curve}
+              initial="initial"
+              exit="exit"
+              transition={{ duration: 1, ease: [0.76, 0, 0.24, 1] }}
+            />
           </svg>
         </>
       )}

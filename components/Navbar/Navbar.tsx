@@ -2,12 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
+import { usePathname } from "next/navigation";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -21,12 +17,14 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const pathname = usePathname();
 
   const { scrollY } = useScroll();
-
-  /* scroll-reactive glass */
   const navOpacity = useTransform(scrollY, [0, 120], [0.6, 1]);
   const navScale = useTransform(scrollY, [0, 120], [0.98, 1]);
+
+  /* close mobile menu on route change */
+  useEffect(() => setIsMenuOpen(false), [pathname]);
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 40);
@@ -53,7 +51,9 @@ export default function Navbar() {
               : "0 0 0 rgba(0,0,0,0)",
           }}
           transition={{ duration: 0.35, ease: EASE }}
-          className="max-w-[1600px] mx-auto flex items-center justify-between px-6 md:px-8 py-4 rounded-full border border-white/10"
+          className="max-w-[1050px] mx-auto flex items-center justify-between px-5 md:px-7 py-2.5 rounded-full"
+
+          
         >
           {/* ========= LOGO ========= */}
           <Link href="/" className="group flex items-center gap-3">
@@ -75,57 +75,63 @@ export default function Navbar() {
 
           {/* ========= DESKTOP LINKS ========= */}
           <div className="hidden lg:flex items-center gap-2">
-            {navItems.map((item, i) => (
-              <motion.div
-                key={item.name}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.08, ease: EASE }}
-              >
-                <Link href={item.href}>
-                  <motion.div
-                    whileHover={{ y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="group relative px-6 py-2.5 text-sm font-medium text-gray-300 hover:text-blue-500 transition-colors"
-                  >
-                    <span className="relative z-10">{item.name}</span>
+            {navItems.map((item, i) => {
+              const isActive = pathname === item.href;
 
-                    {/* magnetic glow */}
-                    <motion.div
-                      className="absolute inset-0 rounded-full bg-white/5 opacity-0 group-hover:opacity-100"
-                      whileHover={{ scale: 1.15 }}
-                      transition={{ duration: 0.25 }}
+              return (
+                <motion.div
+                  key={item.name}
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: i * 0.08, ease: EASE }}
+                >
+                  <Link href={item.href} className="relative group px-6 py-2.5">
+                    <motion.span
+                      whileHover={{ y: -2 }}
+                      className={`text-sm font-medium transition-colors ${
+                        isActive ? "text-white" : "text-gray-400 group-hover:text-white"
+                      }`}
+                    >
+                      {item.name}
+                    </motion.span>
+
+                    {/* underline glow */}
+                    <motion.span
+                      layoutId="nav-underline"
+                      className="absolute left-4 right-4 -bottom-1 h-[2px] bg-gradient-to-r from-violet-500 to-cyan-500"
+                      initial={false}
+                      animate={{ opacity: isActive ? 1 : 0 }}
+                      transition={{ duration: 0.3 }}
                     />
-                  </motion.div>
-                </Link>
-              </motion.div>
-            ))}
+                  </Link>
+                </motion.div>
+              );
+            })}
           </div>
 
           {/* ========= CTA + MOBILE ========= */}
           <div className="flex items-center gap-4">
             {/* CTA */}
-            <motion.a
-              href="#contact"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.96 }}
-              className="hidden md:block relative group overflow-hidden px-6 py-3 rounded-full"
-            >
+            <Link href="/contact" className="hidden md:block">
               <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-violet-500 to-cyan-500"
-                whileHover={{ scale: 1.12 }}
-                transition={{ duration: 0.3 }}
-              />
-              <Link
-                href="/contact"
-                className="relative text-sm font-bold text-white uppercase tracking-wider"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.96 }}
+                className="relative group overflow-hidden px-6 py-3 rounded-full"
               >
-                Let’s Talk
-              </Link>
-            </motion.a>
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-violet-500 to-cyan-500"
+                  whileHover={{ scale: 1.12 }}
+                  transition={{ duration: 0.3 }}
+                />
+                <span className="relative text-sm font-bold text-white uppercase tracking-wider">
+                  Let’s Talk
+                </span>
+              </motion.div>
+            </Link>
 
             {/* MOBILE BUTTON */}
             <motion.button
+              aria-label="Toggle menu"
               whileTap={{ scale: 0.9 }}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="lg:hidden relative w-10 h-10 flex flex-col items-center justify-center gap-1.5"
@@ -138,14 +144,14 @@ export default function Navbar() {
                       isMenuOpen && i === 0
                         ? 45
                         : isMenuOpen && i === 2
-                          ? -45
-                          : 0,
+                        ? -45
+                        : 0,
                     y:
                       isMenuOpen && i === 0
                         ? 6
                         : isMenuOpen && i === 2
-                          ? -6
-                          : 0,
+                        ? -6
+                        : 0,
                     opacity: isMenuOpen && i === 1 ? 0 : 1,
                   }}
                   transition={{ duration: 0.3 }}
@@ -186,13 +192,13 @@ export default function Navbar() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.08, ease: EASE }}
                   >
-                    <Link href={item.href} onClick={() => setIsMenuOpen(false)}>
-                      <motion.div
+                    <Link href={item.href}>
+                      <motion.span
                         whileHover={{ x: 12 }}
                         className="text-4xl font-black text-white"
                       >
                         {item.name}
-                      </motion.div>
+                      </motion.span>
                     </Link>
                   </motion.div>
                 ))}

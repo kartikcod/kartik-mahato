@@ -1,20 +1,18 @@
 import type { Metadata } from "next";
+import type { ReactNode } from "react";
 import "./globals.css";
 import ClientWrapper from "@/components/Provider/ClientWrapper";
 
 export const metadata: Metadata = {
   title: "Portfolio - Kartik Mahato",
-  description: "Web Designer & MERN Stack Developer Portfolio", // Refined description
+  description: "Web Designer & MERN Stack Developer Portfolio",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <body className="bg-[#030303] antialiased">
-        {/* Saara client-side logic is wrapper ke andar jayega */}
-        <ClientWrapper>
-          {children}
-        </ClientWrapper>
+        <ClientWrapper>{children}</ClientWrapper>
       </body>
     </html>
   );
