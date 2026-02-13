@@ -4,6 +4,10 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { MdOutlineDesignServices } from "react-icons/md";
+import { FaConnectdevelop } from "react-icons/fa";
+import { SiMaterialdesignicons } from "react-icons/si";
+import { TbBrandDeezer } from "react-icons/tb";
 
 export default function About() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -328,25 +332,25 @@ export default function About() {
                   title: "Web Design",
                   description:
                     "Creating beautiful, intuitive interfaces that users love",
-                  icon: "🎨",
+                  icon: <MdOutlineDesignServices />,
                 },
                 {
                   title: "Web Development",
                   description:
                     "Building fast, scalable applications with modern tech",
-                  icon: "⚡",
+                  icon: <FaConnectdevelop />,
                 },
                 {
                   title: "UI/UX Design",
                   description:
                     "Crafting seamless user experiences with attention to detail",
-                  icon: "✨",
+                  icon: <SiMaterialdesignicons />,
                 },
                 {
                   title: "Brand Identity",
                   description:
                     "Developing unique visual identities that stand out",
-                  icon: "🎯",
+                  icon: <TbBrandDeezer />,
                 },
               ].map((service, index) => (
                 <motion.div
