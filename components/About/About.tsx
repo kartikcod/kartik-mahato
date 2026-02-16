@@ -372,7 +372,7 @@ export default function About() {
                   className="group relative perspective-1000"
                 >
                   <motion.div
-                    className="absolute -inset-0.5 bg-gradient-to-r from-violet-500 to-cyan-500 rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 blur transition-opacity duration-500"
+                    className="absolute -inset-0.5 bg-gradient-to-r from-violet-500  rounded-xl sm:rounded-2xl opacity-0 group-hover:opacity-100 blur transition-opacity duration-500"
                     animate={{
                       scale: [1, 1.05, 1],
                     }}
