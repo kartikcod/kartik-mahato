@@ -9,10 +9,12 @@ export default function Preloader() {
 
   const words = [
     "Hello",
+    "जौहर",
     "Namaste",
     "नमस्ते",
     "Welcome",
     "स्वागत",
+    "जौहर",
     "Portfolio",
     "Kartik Mahato",
   ];

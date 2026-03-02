@@ -65,7 +65,7 @@ export default function Hero() {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="relative min-h-screen w-full flex flex-col items-center justify-center bg-[#F5F5F5] overflow-hidden pt-24 pb-12 px-4 sm:px-6 lg:px-8"
+      className="relative min-h-screen w-full flex flex-col items-center justify-center bg-[#F5F5F5] overflow-hidden pt-0 md:pt-24 pb-12 px-4 sm:px-6 lg:px-8"
     >
       {/* ===== HEADER ===== */}
       <div className="flex flex-col items-center text-center mt-16 z-50">
@@ -89,7 +89,7 @@ export default function Hero() {
         </motion.div>
 
         {/* Intro text */}
-        <div className="z-30 overflow-hidden">
+        <div className="z-9 overflow-hidden">
           <motion.p
             variants={itemVariants}
             className="text-zinc-600 text-sm sm:text-lg md:text-xl font-medium tracking-tight"
