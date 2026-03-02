@@ -14,7 +14,6 @@ export default function Preloader() {
     "नमस्ते",
     "Welcome",
     "स्वागत",
-    "जौहर",
     "Portfolio",
     "Kartik Mahato",
   ];
