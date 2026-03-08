@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform, useSpring } from "framer-motion";
 import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MdOutlineDesignServices } from "react-icons/md";
+import { MdOutlineDesignServices, MdSettingsSuggest } from "react-icons/md";
 import { FaConnectdevelop } from "react-icons/fa";
 import { SiMaterialdesignicons } from "react-icons/si";
 import { TbBrandDeezer } from "react-icons/tb";
@@ -341,15 +341,14 @@ export default function About() {
                   icon: <FaConnectdevelop />,
                 },
                 {
-                  title: "UI/UX Design",
-                  description:
-                    "Crafting seamless user experiences with attention to detail",
-                  icon: <SiMaterialdesignicons />,
+                  title: "Maintenance & Support",
+                  description: "Continuous updates, security patches, and 24/7 technical monitoring.",
+                  icon: <MdSettingsSuggest />,  
                 },
                 {
-                  title: "Brand Identity",
+                  title: "SEO",
                   description:
-                    "Developing unique visual identities that stand out",
+                    "Optimizing your website for search engines to improve visibility",
                   icon: <TbBrandDeezer />,
                 },
               ].map((service, index) => (

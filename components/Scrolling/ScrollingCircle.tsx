@@ -9,7 +9,7 @@ const ScrollingCircle = () => {
   // Maps scroll to 2 full rotations (720 degrees)
   const rotate = useTransform(scrollYProgress, [0, 1], [0, 720]);
 
-  const text = " • WEB DESIGNER • WEB DEVELOPER • ";
+  const text = " • WEB DESIGNER • WEB DEVELOPER  ";
 
   return (
     /* RESPONSIVE SIZING:
