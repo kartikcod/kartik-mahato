@@ -10,31 +10,42 @@ import Footer from "@/components/Footer/Footer";
 export default function ClientWrapper({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
+  // Lock scroll immediately on initial render
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-      // Loader ke baad scroll enable karne ke liye
-      document.body.style.overflow = "auto";
-      window.scrollTo(0, 0);
-    }, 3000);
+    if (isLoading) {
+      document.body.style.overflow = "hidden";
+    }
+  }, [isLoading]);
 
-    // Loader ke waqt scroll disable rakhein
-    document.body.style.overflow = "hidden";
-
-    return () => clearTimeout(timer);
-  }, []);
+  // This handles everything cleanly once the preloader puzzle finishes
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+    document.body.style.overflow = "auto";
+    window.scrollTo(0, 0);
+  };
 
   return (
     <>
       <AnimatePresence mode="wait">
-        {isLoading && <Preloader key="loader" />}
+        {isLoading && (
+          <Preloader 
+            key="loader" 
+            onComplete={handleLoadingComplete} 
+          />
+        )}
       </AnimatePresence>
       
-      <SmoothScroller>
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
-      </SmoothScroller>
+      {/* Tip: It's best practice to only mount the main site components 
+        after loading is done to prevent background audio, heavy images, 
+        or layout shifts from rendering prematurely.
+      */}
+      {!isLoading && (
+        <SmoothScroller>
+          <Navbar />
+          <main>{children}</main>
+          <Footer />
+        </SmoothScroller>
+      )}
     </>
   );
 }
