@@ -1,13 +1,5 @@
-import Hero from "@/components/Hero/Hero";
-import About from "@/components/About/About";
-
+import DesktopOS from "@/components/DesktopOS/DesktopOS";
 
 export default function Home() {
-  return (
-    <div>
-      <Hero />
-      <About />
-    
-    </div>
-  );
+  return <DesktopOS />;
 }

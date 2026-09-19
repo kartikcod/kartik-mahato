@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import {
   motion,
   useScroll,
@@ -8,40 +9,59 @@ import {
   type Variants,
 } from "framer-motion";
 import Image from "next/image";
+import { ArrowUpRight, Sparkles } from "lucide-react";
 
 export default function Hero() {
-  const { scrollY } = useScroll();
+  const containerRef = useRef<HTMLElement>(null);
 
-  /* ========= PARALLAX ========= */
+  /* ========= SCROLL PARALLAX (Disabled/reduced on mobile via clamp) ========= */
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+
   const springConfig = { damping: 25, stiffness: 100 };
-
-  const yText = useSpring(
-    useTransform(scrollY, [0, 500], [0, -100]),
-    springConfig,
+  const yBackText = useSpring(
+    useTransform(scrollYProgress, [0, 1], [0, -80]),
+    springConfig
   );
-
   const yImage = useSpring(
-    useTransform(scrollY, [0, 500], [0, -40]),
-    springConfig,
+    useTransform(scrollYProgress, [0, 1], [0, -30]),
+    springConfig
+  );
+  const yFrontText = useSpring(
+    useTransform(scrollYProgress, [0, 1], [0, -50]),
+    springConfig
   );
 
-  /* ========= VARIANTS ========= */
+  /* ========= ANIMATION VARIANTS ========= */
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.3,
+        staggerChildren: 0.12,
+        delayChildren: 0.1,
       },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
+  };
+
+  const textRevealVariants: Variants = {
+    hidden: { y: "110%" },
+    visible: {
+      y: "0%",
       transition: {
         duration: 1,
         ease: [0.16, 1, 0.3, 1],
@@ -49,150 +69,149 @@ export default function Hero() {
     },
   };
 
-  const revealTitle: Variants = {
-    hidden: { y: "100%" },
-    visible: {
-      y: 0,
-      transition: {
-        duration: 1.2,
-        ease: [0.16, 1, 0.3, 1],
-      },
-    },
-  };
-
   return (
     <motion.section
+      ref={containerRef}
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="relative min-h-screen w-full flex flex-col items-center justify-center bg-[#F5F5F5] overflow-hidden pt-0 md:pt-24 pb-12 px-4 sm:px-6 lg:px-8"
+      className="relative min-h-[100dvh] w-full flex flex-col justify-between items-center bg-[#F8F8F7] text-zinc-950 overflow-hidden pt-8 sm:pt-12 md:pt-16 px-4 sm:px-6 lg:px-12 selection:bg-black selection:text-white"
     >
-      {/* ===== HEADER ===== */}
-      <div className="flex flex-col items-center text-center mt-16 z-50">
-        {/* Badge */}
-        <motion.div
-          variants={itemVariants}
-          className="relative group cursor-default mb-6"
-        >
-          <div className="absolute -inset-0.5 bg-linear-to-r from-violet-500 to-cyan-500 rounded-full blur opacity-30 group-hover:opacity-100 transition duration-1000" />
+      {/* Background Architectural Grid Accent */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#00000008_1px,transparent_1px),linear-gradient(to_bottom,#00000008_1px,transparent_1px)] bg-[size:2.5rem_2.5rem] sm:bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_70%_50%_at_50%_0%,#000_70%,transparent_100%)] pointer-events-none" />
 
-          <div className="relative px-4 py-1.5 bg-black border border-white/10 rounded-full flex items-center gap-2">
+      {/* ===== 1. TOP BAR / INTRO ===== */}
+      <div className="relative z-30 flex flex-col items-center text-center max-w-xl mx-auto space-y-3 sm:space-y-4">
+        {/* Availability Badge */}
+        <motion.div variants={itemVariants} className="inline-flex mt-10">
+          <div className="group relative flex items-center gap-2 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full border border-black/10 bg-white/80 backdrop-blur-md shadow-xs cursor-default">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
               <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
             </span>
-
-            <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-zinc-300">
-              Freelancing Available
+            <span className="text-[10px] sm:text-xs font-semibold tracking-wider uppercase text-zinc-700">
+              Available for Projects
             </span>
+            <Sparkles className="w-3 h-3 text-zinc-400 group-hover:text-amber-500 transition-colors" />
           </div>
         </motion.div>
 
-        {/* Intro text */}
-        <div className="z-9 overflow-hidden">
+        {/* Intro Subtitle */}
+        <div className="overflow-hidden px-2">
           <motion.p
             variants={itemVariants}
-            className="text-zinc-600 text-sm sm:text-lg md:text-xl font-medium tracking-tight"
+            className="text-zinc-600 text-xs sm:text-base md:text-lg font-normal tracking-tight leading-relaxed"
           >
             <motion.span
-              animate={{
-                rotate: [0, -10, 12, -10, 9, 0], // Shake angles
-              }}
+              animate={{ rotate: [0, -14, 14, -10, 10, 0] }}
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                repeatDelay: 1, // Har shake ke baad thoda break
+                repeatDelay: 2.5,
                 ease: "easeInOut",
               }}
-              className="inline-block mr-1 origin-bottom" // origin-bottom se shake natural lagega
+              className="inline-block mr-1 origin-bottom-right"
             >
               👋
             </motion.span>
-            My Name is
-            <span className="font-bold text-black mx-1.5 relative inline-block">
+            Hey, I&apos;m{" "}
+            <span className="font-semibold text-zinc-950 relative inline-block">
               Kartik Mahato
               <motion.span
-                initial={{ width: 0 }}
-                animate={{ width: "100%" }}
-                transition={{ delay: 1.5, duration: 0.8 }}
-                className="absolute bottom-0 left-0 h-0.5 bg-violet-500/50"
+                initial={{ scaleX: 0 }}
+                animate={{ scaleX: 1 }}
+                transition={{ delay: 1, duration: 0.6, ease: "easeOut" }}
+                className="absolute -bottom-0.5 left-0 w-full h-[2px] bg-zinc-950 origin-left"
               />
             </span>
-            and I am a{" "}
-            <span className="italic font-light text-violet-500">
-              Freelancer
-            </span>
+            — craft-focused Designer & Creative Technologist.
           </motion.p>
         </div>
       </div>
 
-      {/* ===== MAIN HERO ===== */}
-      <div className="relative w-full max-w-7xl flex flex-col items-center justify-center mt-12">
-        {/* Solid text */}
-        <div className="overflow-hidden">
+      {/* ===== 2. HERO CENTER: INTERLOCKED TYPOGRAPHY & IMAGE ===== */}
+      <div className="relative w-full max-w-6xl flex flex-col items-center justify-center my-auto py-4 sm:py-8">
+        
+        {/* Layer 1: Background Big Heading */}
+        <div className="overflow-hidden select-none">
           <motion.h1
-            variants={revealTitle}
-            style={{ y: yText }}
-            className="relative z-10 text-[18vw] sm:text-[16vw] md:text-[12vw] lg:text-[10vw] leading-[1.05] font-black text-black tracking-tighter uppercase select-none"
+            variants={textRevealVariants}
+            style={{ y: yBackText }}
+            className="text-[15vw] sm:text-[13vw] md:text-[11vw] lg:text-[9.5vw] font-black uppercase tracking-tighter leading-[0.88] text-zinc-900 text-center"
           >
-            Web Designer
+            Creative
           </motion.h1>
         </div>
 
-        {/* Image */}
+        {/* Layer 2: Main Subject Cutout */}
         <motion.div
           variants={itemVariants}
           style={{ y: yImage }}
-          className="relative z-20 -mt-[10%] w-[72%] sm:w-[52%] md:w-[42%] lg:w-[32%] aspect-[4/5]"
+          className="relative z-20 -mt-[14vw] sm:-mt-[11vw] md:-mt-[9vw] w-[65vw] sm:w-[46vw] md:w-[32vw] lg:w-[24vw] max-w-[340px] aspect-[4/5] pointer-events-auto"
         >
-          <Image
-            src="/kartik.png"
-            alt="Kartik Mahato profile"
-            fill
-            priority
-            sizes="(max-width: 640px) 72vw, (max-width: 1024px) 52vw, 32vw"
-            className="object-contain grayscale drop-shadow-[0_20px_60px_rgba(0,0,0,0.6)] hover:grayscale-0 transition-all duration-700"
-          />
+          <div className="relative w-full h-full group">
+            <Image
+              src="/kartik.png"
+              alt="Kartik Mahato"
+              fill
+              priority
+              sizes="(max-width: 640px) 65vw, (max-width: 768px) 46vw, (max-width: 1024px) 32vw, 340px"
+              className="object-contain drop-shadow-[0_20px_30px_rgba(0,0,0,0.3)] grayscale contrast-105 group-hover:grayscale-0 group-hover:scale-[1.02] transition-all duration-700 ease-out"
+            />
+          </div>
 
-          {/* CTA */}
+          {/* Floating CTAs - Responsively stacked on mobile */}
           <motion.div
             variants={itemVariants}
-            className="absolute -bottom-6 sm:bottom-10 left-1/2 -translate-x-1/2 flex flex-col sm:flex-row gap-3 z-40 w-full px-4 justify-center"
+            className="absolute -bottom-10 sm:-bottom-6 left-1/2 -translate-x-1/2 flex flex-col sm:flex-row items-center gap-2 sm:gap-3 z-40 w-full px-4 justify-center"
           >
-            <button className="whitespace-nowrap px-6 py-3 bg-black text-white text-xs uppercase font-bold rounded-xl hover:bg-zinc-800 transition-all shadow-2xl active:scale-95">
-              You need a designer
-            </button>
-            <button className="whitespace-nowrap px-6 py-3 border-2 border-black bg-white/80 backdrop-blur-md text-black text-xs uppercase font-bold rounded-xl hover:bg-black hover:text-white transition-all active:scale-95">
-              You need a developer
-            </button>
+            <a
+              href="#work"
+              className="w-full sm:w-auto text-center whitespace-nowrap inline-flex items-center justify-center gap-1.5 px-4 sm:px-5 py-2 sm:py-2.5 bg-black text-white text-[11px] sm:text-xs font-semibold uppercase tracking-wider rounded-full hover:bg-zinc-800 transition-all active:scale-95 shadow-md"
+            >
+              <span>Selected Work</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </a>
+            <a
+              href="#contact"
+              className="w-full sm:w-auto text-center whitespace-nowrap inline-flex items-center justify-center px-4 sm:px-5 py-2 sm:py-2.5 bg-white/90 backdrop-blur-md border border-black/15 text-black text-[11px] sm:text-xs font-semibold uppercase tracking-wider rounded-full hover:bg-black hover:text-white transition-all active:scale-95 shadow-xs"
+            >
+              Get In Touch
+            </a>
           </motion.div>
         </motion.div>
 
-        {/* Outline text */}
-        <motion.h1
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1, duration: 1 }}
-          style={{ y: yText, WebkitTextStroke: "1px #000" }}
-          className="absolute top-[36%] z-0 text-[17vw] sm:text-[15vw] md:text-[14vw] lg:text-[12vw] leading-[0.8] font-black tracking-tighter uppercase text-transparent select-none"
-        >
-          & Developer
-        </motion.h1>
+        {/* Layer 3: Intersecting Foreground Line */}
+        <div className="overflow-hidden select-none -mt-[9vw] sm:-mt-[7vw] md:-mt-[5vw] z-30 pointer-events-none">
+          <motion.h2
+            variants={textRevealVariants}
+            style={{ y: yFrontText }}
+            className="text-[14vw] sm:text-[12vw] md:text-[10vw] lg:text-[8.5vw] font-black uppercase tracking-tighter leading-[0.85] text-transparent bg-clip-text bg-gradient-to-b from-zinc-950 to-zinc-700 text-center"
+          >
+            Developer
+          </motion.h2>
+        </div>
       </div>
 
-      {/* <motion.div
+      {/* ===== 3. FOOTER META BAR ===== */}
+      <motion.div
         variants={itemVariants}
-        className="absolute bottom-8 right-6 md:bottom-12 md:right-12 z-30 flex gap-6 opacity-40 grayscale"
+        className="relative z-30 w-full max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 border-t border-black/10 pt-4 sm:pt-5 text-center text-[10px] sm:text-xs text-zinc-500 font-mono tracking-tight"
       >
-        {["React", "Tailwind", "Framer Motion"].map((t) => (
-          <span
-            key={t}
-            className="text-[10px] md:text-sm font-bold uppercase tracking-widest text-black"
-          >
-            {t}
-          </span>
-        ))}
-      </motion.div> */}
+        <div className="flex items-center gap-3 sm:gap-6 justify-center">
+          <span>BASED IN INDIA</span>
+          <span>•</span>
+          <span>AVAILABLE WORLDWIDE</span>
+        </div>
+
+        <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 font-sans font-semibold text-zinc-800 uppercase tracking-widest text-[10px] sm:text-[11px]">
+          <span>React / Next.js</span>
+          <span>•</span>
+          <span>TypeScript</span>
+          <span>•</span>
+          <span>Motion Systems</span>
+        </div>
+      </motion.div>
     </motion.section>
   );
 }
